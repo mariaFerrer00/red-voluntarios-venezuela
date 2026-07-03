@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Voluntarios Venezuela — Emergencia Terremoto</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="logo" onclick="showHome(); return false;">Red Voluntarios VE</a>
+      <nav class="main-nav" id="mainNav">
+        <button class="nav-btn" onclick="showView('refugios')">Ver instituciones o edificios</button>
+        <button class="nav-btn"                 onclick="showView('registro')">Soy voluntario</button>
+        <button class="nav-btn nav-btn--accent" onclick="showView('vacante')">Necesito voluntarios</button>
+      </nav>
+      <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- BANNER -->
+  <div class="emergency-banner">
+  </div>
+
+  <!-- HERO (solo registro / vacante) -->
+  <section class="hero" id="hero">
+    <div class="container hero-inner">
+      <p class="hero-eyebrow">Red de respuesta ciudadana · Venezuela</p>
+      <h1 class="hero-title">Si puedes ayudar, registrate con tus horarios disponibles. Si necesitas voluntarios en un lugar, publicalo y avisamos de inmediato.</h1>
+      <div class="hero-actions">
+        <button class="btn btn--primary" onclick="showView('registro')">Quiero ser voluntario</button>
+        <button class="btn btn--ghost"   onclick="showView('vacante')">Necesito voluntarios</button>
+      </div>
+
+      <!-- CONTADORES -->
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-num" id="contadorVoluntarios">—</span>
+          <span class="stat-label">Voluntarios registrados</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+          <span class="stat-num" id="contadorInstituciones">—</span>
+          <span class="stat-label">Insituciones y edificos activos</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-bg-shape" aria-hidden="true"></div>
+  </section>
+
+  <!-- VIEW 1 — REFUGIOS -->
+  <main id="view-refugios" class="view">
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <p class="section-eyebrow">Directorio</p>
+          <h2 class="section-title">Instituciones y edificos activos</h2>
+          <p class="section-desc">Lugares verificados donde se esta ayudando a personas afectadas y a edificios que se cayeron.</p>
+        </div>
+        <div class="filter-bar">
+          <input type="text" id="searchInput" class="search-bar"
+            placeholder="Buscar por nombre o direccion…" oninput="filterCards()" />
+          <span class="search-icon">⌕</span>
+        </div>
+        <div id="cardGrid" class="card-grid">
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+          <div class="skeleton-card"></div>
+        </div>
+        <div class="refresh-row">
+          <button class="btn btn--ghost btn--sm" onclick="loadRefugios()">Actualizar</button>
+        </div>
+
+        <div class="institutions-block">
+          <div class="institutions-page-card" id="institucionesInfo">
+            <p class="institutions-page-eyebrow">¿Tu institución no está en la lista?</p>
+            <p class="institutions-page-text">
+              Escríbenos para agregarla a la plataforma:
+            </p>
+            <ul class="institutions-contact-list">
+              <li>
+                <span class="institutions-contact-label">Correo</span>
+                <a href="mailto:techsolutionsalthea@gmail.com">techsolutionsalthea@gmail.com</a>
+              </li>
+              <li>
+                <span class="institutions-contact-label">WhatsApp</span>
+                <a href="https://wa.me/584241668886" target="_blank" rel="noopener noreferrer">+58 4241668886</a>
+              </li>
+              <li>
+                <span class="institutions-contact-label">WhatsApp</span>
+                <a href="https://wa.me/584241988493" target="_blank" rel="noopener noreferrer">+58 4241988493</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- VIEW 2 — REGISTRO VOLUNTARIO -->
+  <main id="view-registro" class="view">
+    <section class="section">
+      <div class="container form-container">
+        <div class="form-sidebar">
+          <p class="section-eyebrow">Voluntarios</p>
+          <h2 class="section-title">Registrate para ayudar</h2>
+          <p class="section-desc">Indica en que horarios puedes ayudar y que tarea puedes realizar. Solo te avisamos cuando coinciden fecha, hora y tarea (si la publicacion la pide).</p>
+          <ul class="benefit-list">
+            <li>Puedes agregar varios rangos de horario</li>
+            <li>Elige una tarea de la lista o dejala sin especificar</li>
+            <li>Si elegiste tarea, solo te avisan cuando la necesitan</li>
+            <li>Si no elegiste tarea, solo te avisan cuando no piden ninguna</li>
+          </ul>
+        </div>
+        <div class="form-card">
+          <form id="registroForm" novalidate>
+            <div class="form-group">
+              <label for="r_nombre">Nombre completo</label>
+              <input type="text" id="r_nombre" name="nombre" placeholder="Ej. Maria Gonzalez" required />
+              <span class="field-error" id="err_r_nombre"></span>
+            </div>
+            <div class="form-group">
+              <label for="r_email">Correo electronico</label>
+              <input type="email" id="r_email" name="email" placeholder="tu@correo.com" required />
+              <span class="field-error" id="err_r_email"></span>
+            </div>
+            <div class="form-group">
+              <label>En que fechas y horarios puedes ayudar?</label>
+              <p class="field-hint">Elige una fecha del calendario y el rango de hora. Puedes agregar varias fechas, incluso varios horarios en el mismo dia.</p>
+              <div id="rangosContainer"></div>
+              <button type="button" class="btn-add-rango" onclick="agregarRango()">
+                + Agregar otra fecha
+              </button>
+              <span class="field-error" id="err_rangos"></span>
+            </div>
+            <div class="form-group">
+              <label for="r_tarea">Tu tarea <span class="optional">(opcional)</span></label>
+              <p class="field-hint">Selecciona una tarea de la lista. Solo recibiras avisos que coincidan con ella.</p>
+              <div class="select-wrap">
+                <select id="r_tarea" name="tarea">
+                  <option value="">— Sin tarea específica —</option>
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn--primary btn--full" id="btnRegistro">
+              <span class="btn-text">Registrarme como voluntario</span>
+              <span class="btn-spinner hidden">⟳</span>
+            </button>
+          </form>
+          <div class="success-message hidden" id="registroSuccess">
+            <div class="success-icon">✓</div>
+            <h3>Registrado!</h3>
+            <p>Gracias por querer ayudar. Si ya estabas registrado, tu nuevo horario fue agregado a los que ya tenias. Te avisaremos cuando haya una necesidad en tu horario.</p>
+            <button class="btn btn--ghost btn--sm" onclick="resetRegistro()">Registrar otra persona</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- VIEW 3 — NECESITO VOLUNTARIOS -->
+  <main id="view-vacante" class="view">
+    <section class="section">
+      <div class="container form-container">
+        <div class="form-sidebar">
+          <p class="section-eyebrow">Publicar necesidad</p>
+          <h2 class="section-title">Necesitas voluntarios?</h2>
+          <p class="section-desc">Selecciona el lugar e indica a que hora necesitas ayuda. Si indicas una tarea, solo se avisa a voluntarios con esa tarea. Si no indicas tarea, solo se avisa a quienes no eligieron ninguna.</p>
+          <div class="flow-steps">
+            <div class="flow-step"><span class="step-num">1</span><span>Elige la institucion o edificio</span></div>
+            <div class="flow-step"><span class="step-num">2</span><span>Indica fecha, hora y tarea (opcional)</span></div>
+            <div class="flow-step"><span class="step-num">3</span><span>Solo los voluntarios que coinciden reciben el correo</span></div>
+          </div>
+        </div>
+        <div class="form-card">
+          <form id="vacanteForm" novalidate>
+            <div class="form-group">
+              <label for="v_institucion">En que lugar se necesitan voluntarios?</label>
+              <div class="select-wrap">
+                <select id="v_institucion" name="institucion" required onchange="onInstitucionChange()">
+                  <option value="">— Cargando lugares… —</option>
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+              <span class="field-error" id="err_v_institucion"></span>
+            </div>
+
+            <div class="lugar-info hidden" id="lugarInfo">
+              <p class="lugar-info-label">Direccion</p>
+              <p class="lugar-info-value" id="lugarDireccion"></p>
+            </div>
+
+            <div class="form-group">
+              <label>A que hora se necesitan?</label>
+              <p class="field-hint">Los voluntarios disponibles en ese horario recibiran el aviso.</p>
+              <div class="cuando-options">
+                <label class="cuando-option">
+                  <input type="radio" name="cuando_tipo" value="ahora" checked onchange="onCuandoChange()" />
+                  <span>Ya mismo</span>
+                </label>
+                <label class="cuando-option">
+                  <input type="radio" name="cuando_tipo" value="hora" onchange="onCuandoChange()" />
+                  <span>A una hora especifica</span>
+                </label>
+              </div>
+              <div class="hora-input hidden" id="horaInput">
+                <label class="hora-label">Que dia?</label>
+                <input type="date" id="v_fecha" class="rango-fecha" onchange="updatePreview()" style="margin-bottom:12px;" />
+                <label class="hora-label">A que hora?</label>
+                <div class="rango-item" style="margin-bottom:0">
+                  <div class="rango-selects">
+                    <select class="rango-select-hora" id="v_hora_h" onchange="updatePreview()">
+                      <option value="1">1:00</option><option value="2">2:00</option>
+                      <option value="3">3:00</option><option value="4">4:00</option>
+                      <option value="5">5:00</option><option value="6">6:00</option>
+                      <option value="7">7:00</option><option value="8">8:00</option>
+                      <option value="9">9:00</option><option value="10">10:00</option>
+                      <option value="11">11:00</option><option value="12" selected>12:00</option>
+                    </select>
+                    <select class="rango-select-ampm" id="v_hora_ampm" onchange="updatePreview()">
+                      <option value="AM">AM</option>
+                      <option value="PM" selected>PM</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <span class="field-error" id="err_cuando"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="v_tarea">Tarea requerida <span class="optional">(opcional)</span></label>
+              <p class="field-hint">Selecciona una tarea. Si la indicas, solo avisamos a voluntarios con esa misma tarea.</p>
+              <div class="select-wrap">
+                <select id="v_tarea" name="tarea" onchange="updatePreview()">
+                  <option value="">— Sin tarea específica —</option>
+                </select>
+                <span class="select-arrow">▾</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="v_descripcion">Detalle adicional <span class="optional">(opcional)</span></label>
+              <textarea id="v_descripcion" name="descripcion" rows="3"
+                placeholder="Ej. Repartir agua y alimentos, registrar damnificados…"></textarea>
+            </div>
+
+            <div class="notify-preview">
+              <p class="notify-label">Correo que recibiran los voluntarios:</p>
+              <p class="notify-text" id="notifyText">
+                <em>Selecciona un lugar para ver la vista previa…</em>
+              </p>
+            </div>
+
+            <button type="submit" class="btn btn--primary btn--full" id="btnVacante">
+              <span class="btn-text">Avisar a voluntarios</span>
+              <span class="btn-spinner hidden">⟳</span>
+            </button>
+          </form>
+          <div class="success-message hidden" id="vacanteSuccess">
+            <div class="success-icon notify-icon">✉</div>
+            <h3>Aviso enviado!</h3>
+            <p id="vacanteSuccessMsg">Los voluntarios han sido notificados por correo.</p>
+            <button class="btn btn--ghost btn--sm" onclick="resetVacante()">Publicar otra necesidad</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p class="footer-logo">Althea Tech Solutions</p>
+      <p class="footer-copy">Ante la emergencia del terremoto · 2026</p>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
